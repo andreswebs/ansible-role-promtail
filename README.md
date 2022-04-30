@@ -7,6 +7,12 @@ Ansible role to install promtail.
 The `jq` program must be installed on the host. See the
 [jq web page](https://stedolan.github.io/jq/) to install.
 
+## Install
+
+```sh
+ansible-galaxy install andreswebs.promtail
+```
+
 ## Role Variables
 
 - `promtail_loki_url`: Set the Loki URL in the format `<protocol>://<host>:<port>`.
