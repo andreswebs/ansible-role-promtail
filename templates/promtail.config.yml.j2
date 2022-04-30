@@ -27,7 +27,7 @@ scrape_configs:
         - localhost
       labels:
         job: varlogs
-        __path__: /var/log/*log
+        __path__: /var/log/*log*
 
   - job_name: apache
     static_configs:
@@ -42,8 +42,9 @@ scrape_configs:
           selector: '{job="apache"}'
           stages:
               ## https://regex-vis.com
+              ## ^(?<ip>\S+) (?<identd>\S+) (?<user>\S+) \[(?<timestamp>[\w:/]+\s[+-]\d{4})\] "(?<action>\S+)\s?(?<path>\S+)?\s?(?<protocol>\S+)?" (?<status_code>\d{3}|-) (?<size>\d+|-)\s?"?(?<referer>[^"]*)"?\s?"?(?<useragent>[^"]*)?"?$
             - regex:
-                expression: '^(?<ip>\S+) (?<identd>\S+) (?<user>\S+) \[(?<timestamp>[\w:/]+\s[+-]\d{4})\] "(?<action>\S+)\s?(?<path>\S+)?\s?(?<protocol>\S+)?" (?<status_code>\d{3}|-) (?<size>\d+|-)\s?"?(?<referer>[^"]*)"?\s?"?(?<useragent>[^"]*)?"?$'
+                expression: "^(?P<ip>\\S+) (?P<identd>\\S+) (?P<user>\\S+) \\[(?P<timestamp>[\\w:/]+\\s[+\\-]\\d{4})\\] \"(?P<action>\\S+)\\s?(?P<path>\\S+)?\\s?(?P<protocol>\\S+)?\" (?P<status_code>\\d{3}|-) (?P<size>\\d+|-)\\s?\"?(?P<referer>[^\"]*)\"?\\s?\"?(?P<useragent>[^\"]*)?\"?$"
             - labels:
                 #ip:
                 #identd:
@@ -65,20 +66,3 @@ scrape_configs:
           job: nginx
           host: localhost
           __path__: /var/log/nginx/*log
-    pipeline_stages:
-      - match:
-          selector: '{job="nginx"}'
-          stages:
-            - regex:
-                expression: '^(?<remote_addr>[\w\.]+) - (?<remote_user>[^ ]*) \[(?<time_local>.*)\] "(?<method>[^ ]*) (?<request>[^ ]*) (?<protocol>[^ ]*)" (?<status>[\d]+) (?<body_bytes_sent>[\d]+) "(?<http_referer>[^"]*)" "(?<http_user_agent>[^"]*)"?'
-            - labels:
-                #remote_addr:
-                #remote_user:
-                #time_local:
-                method:
-                #request:
-                #protocol:
-                status:
-                #body_bytes_sent:
-                #http_referer:
-                #http_user_agent:
