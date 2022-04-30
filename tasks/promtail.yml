@@ -49,7 +49,8 @@
     - promtail_config
 
 - name: Install Promtail
-  ansible.builtin.script: scripts/install-promtail
+  # ansible.builtin.script: scripts/install-promtail
+  script: scripts/install-promtail
   args:
     creates: /usr/local/bin/promtail
   tags:
