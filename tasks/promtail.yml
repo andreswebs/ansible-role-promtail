@@ -19,7 +19,7 @@
     owner: promtail
     group: promtail
     mode: '0644'
-    state: file
+    state: touch
     path: /tmp/positions.yml
   tags:
     - promtail
