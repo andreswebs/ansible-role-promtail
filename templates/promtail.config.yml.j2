@@ -1,0 +1,84 @@
+---
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 9095
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: "{{ promtail_loki_url | regex_replace("\/+$", "")}}/loki/api/v1/push"
+
+scrape_configs:
+
+  - job_name: systemd-journal
+    journal:
+      max_age: 12h
+      labels:
+        job: systemd-journal
+        host: localhost
+    relabel_configs:
+      - source_labels: [ __journal__systemd_unit ]
+        target_label: unit
+
+  - job_name: varlogs
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: varlogs
+        __path__: /var/log/*log
+
+  - job_name: apache
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: apache
+          host: localhost
+          __path__: /var/log/apache2/*log
+    pipeline_stages:
+      - match:
+          selector: '{job="apache"}'
+          stages:
+              ## https://regex-vis.com
+            - regex:
+                expression: '^(?<ip>\S+) (?<identd>\S+) (?<user>\S+) \[(?<timestamp>[\w:/]+\s[+-]\d{4})\] "(?<action>\S+)\s?(?<path>\S+)?\s?(?<protocol>\S+)?" (?<status_code>\d{3}|-) (?<size>\d+|-)\s?"?(?<referer>[^"]*)"?\s?"?(?<useragent>[^"]*)?"?$'
+            - labels:
+                #ip:
+                #identd:
+                #user:
+                #timestamp:
+                action:
+                #path:
+                #protocol:
+                status_code:
+                #size:
+                #referer:
+                #useragent:
+
+  - job_name: nginx
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx
+          host: localhost
+          __path__: /var/log/nginx/*log
+    pipeline_stages:
+      - match:
+          selector: '{job="nginx"}'
+          stages:
+            - regex:
+                expression: '^(?<remote_addr>[\w\.]+) - (?<remote_user>[^ ]*) \[(?<time_local>.*)\] "(?<method>[^ ]*) (?<request>[^ ]*) (?<protocol>[^ ]*)" (?<status>[\d]+) (?<body_bytes_sent>[\d]+) "(?<http_referer>[^"]*)" "(?<http_user_agent>[^"]*)"?'
+            - labels:
+                #remote_addr:
+                #remote_user:
+                #time_local:
+                method:
+                #request:
+                #protocol:
+                status:
+                #body_bytes_sent:
+                #http_referer:
+                #http_user_agent:

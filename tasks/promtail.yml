@@ -1,0 +1,77 @@
+---
+- name: Create promtail user
+  ansible.builtin.user:
+    state: present
+    name: promtail
+    create_home: no
+    system: yes
+    password: "*"
+    shell: /usr/sbin/nologin
+    groups:
+      - systemd-journal
+      - adm
+  tags:
+    - promtail
+    - promtail_system
+
+- name: Set positions.yml permissions
+  ansible.builtin.file:
+    owner: promtail
+    group: promtail
+    mode: '0644'
+    state: file
+    path: /tmp/positions.yml
+  tags:
+    - promtail
+    - promtail_system
+
+- name: Create Promtail config dir
+  ansible.builtin.file:
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+    dest: /etc/promtail
+  tags:
+    - promtail
+    - promtail_system
+    - promtail_config
+
+- name: Set Promtail config
+  ansible.builtin.template:
+    owner: root
+    group: root
+    mode: '0644'
+    src: promtail.config.yml.j2
+    dest: /etc/promtail/promtail.config.yml
+  tags:
+    - promtail
+    - promtail_config
+
+- name: Install Promtail
+  ansible.builtin.script: scripts/install-promtail
+  args:
+    creates: /usr/local/bin/promtail
+  tags:
+    - promtail
+    - promtail_install
+
+- name: Set /lib/systemd/system/promtail.service
+  ansible.builtin.copy:
+    owner: root
+    group: root
+    mode: '0644'
+    src: promtail.service
+    dest: /lib/systemd/system/promtail.service
+  tags:
+    - promtail
+    - promtail_service
+
+- name: Start and enable Promtail service
+  ansible.builtin.service:
+    name: promtail
+    state: started
+    enabled: yes
+  tags:
+    - promtail
+    - promtail_service
