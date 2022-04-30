@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Andre Silva
-  description: Install promtail
+  description: Installs promtail
   role_name: promtail
 
   license: Unlicense
