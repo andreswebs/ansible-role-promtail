@@ -17,18 +17,17 @@ DOWNLOAD_URL="https://github.com/${REPO}/releases/download/v${VERSION}/${FILE_NA
 WORKDIR="$(mktemp -d -t ${BIN_NAME}.XXXXXXXXX)"
 
 TMP_FILE="${WORKDIR}/${FILE_NAME}"
-TMP_DIR="${WORKDIR}/${BIN_NAME}-${VERSION}"
 
 INSTALL_PATH="/usr/local/bin/${BIN_NAME}"
 
 function finish {
-  rm -rf "${TMP_DIR}" "${TMP_FILE}"
+  rm -rf "${WORKDIR}"
 }
 
 trap finish EXIT
 
 curl --silent -Lo "${TMP_FILE}" "${DOWNLOAD_URL}"
 
-unzip -q "${TMP_FILE}" -d "${TMP_DIR}"
+unzip -q "${TMP_FILE}" -d "${WORKDIR}"
 
-install "${TMP_DIR}/${BIN_NAME}-${OS}-${ARCH}" "${INSTALL_PATH}"
+install "${WORKDIR}/${BIN_NAME}-${OS}-${ARCH}" "${INSTALL_PATH}"

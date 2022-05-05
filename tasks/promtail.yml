@@ -1,15 +1,38 @@
 ---
+- name: Create promtail group
+  ansible.builtin.group:
+    state: present
+    name: promtail
+    system: yes
+  tags:
+    - promtail
+    - promtail_system
+
 - name: Create promtail user
   ansible.builtin.user:
     state: present
     name: promtail
-    create_home: no
+    group: promtail
     system: yes
-    password: "*"
+    create_home: no
+    home: /var/lib/promtail
     shell: /usr/sbin/nologin
+    password: "*"
     groups:
       - systemd-journal
       - adm
+    append: yes
+  tags:
+    - promtail
+    - promtail_system
+
+- name: Create /var/lib/promtail
+  ansible.builtin.file:
+    owner: promtail
+    group: promtail
+    mode: '0755'
+    state: directory
+    dest: /var/lib/promtail
   tags:
     - promtail
     - promtail_system
@@ -20,7 +43,7 @@
     group: promtail
     mode: '0644'
     state: touch
-    path: /tmp/positions.yml
+    path: /var/lib/promtail/positions.yml
   tags:
     - promtail
     - promtail_system
@@ -43,7 +66,7 @@
     group: root
     mode: '0644'
     src: promtail.config.yml.j2
-    dest: /etc/promtail/promtail.config.yml
+    dest: /etc/promtail/promtail.yml
   tags:
     - promtail
     - promtail_config
