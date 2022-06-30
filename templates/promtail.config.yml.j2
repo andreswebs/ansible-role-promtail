@@ -29,15 +29,6 @@ scrape_configs:
           job: varlogs
           __path__: /var/log/*log*
 
-  - job_name: postfix
-    static_configs:
-      - targets:
-          - localhost
-        labels:
-          job: postfix
-          __path__: /var/log/mail.log
-
-
   - job_name: apache
     static_configs:
       - targets:
