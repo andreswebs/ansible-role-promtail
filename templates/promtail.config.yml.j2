@@ -28,14 +28,6 @@ scrape_configs:
         labels:
           job: varlogs
           __path__: /var/log/*log*
-    pipeline_stages:
-      - match:
-          selector: '{filename="/var/log/mail.log"}'
-          stages:
-            - regex:
-                expression: '^\w+ \d{1,2} \d{2}:\d{2}:\d{2} \w+ postfix\/smtpd\[\d+\]: \w+: (?P<status>\w+): \w+ from .+\[\d+\.\d+\.\d+\.\d+\]: \d+ \d+\.\d+\.\d+ <(?U).+@.+(?-U)>: .+; from=<(?U).+@.+(?-U)> to=<(?U).+@.+(?-U)> proto=\w+ helo=<.+>'
-            - labels:
-                status:
 
   - job_name: postfix
     static_configs:
