@@ -4,7 +4,7 @@ server:
   grpc_listen_port: 9095
 
 positions:
-  filename: /var/lib/promtail/positions.yaml
+  filename: /var/lib/promtail/positions.yml
 
 clients:
   - url: "{{ promtail_loki_url | regex_replace("\/+$", "")}}/loki/api/v1/push"
