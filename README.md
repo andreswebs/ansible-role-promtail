@@ -15,8 +15,11 @@ ansible-galaxy install andreswebs.promtail
 
 ## Role Variables
 
-- `promtail_loki_url`: Set the Loki URL in the format `<protocol>://<host>:<port>`.
-  The default value is `http://localhost:3100`.
+- `promtail_loki_url`: Set the Loki URL in the format
+  `<protocol>://<host>:<port>`. The default value is `http://localhost:3100`.
+
+- `promtail_label_origin`: Set the value for the external label `origin`. The
+  default value is `default`.
 
 ## Example Playbook
 
@@ -27,6 +30,7 @@ ansible-galaxy install andreswebs.promtail
     - role: andreswebs.promtail
       vars:
         promtail_loki_url: http://loki.example.com:3100
+        promtail_label_origin: example-lxd-container
 ```
 
 ## Authors

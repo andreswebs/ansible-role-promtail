@@ -8,6 +8,8 @@ positions:
 
 clients:
   - url: "{{ promtail_loki_url | regex_replace("\/+$", "")}}/loki/api/v1/push"
+    external_labels:
+      origin: "{{ promtail_label_origin }}"
 
 scrape_configs:
 

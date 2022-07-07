@@ -1,2 +1,3 @@
 ---
 promtail_loki_url: http://localhost:3100
+promtail_label_origin: default
