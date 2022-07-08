@@ -1,4 +1,15 @@
 ---
+- name: Install dependencies
+  ansible.builtin.apt:
+    state: latest
+    update_cache: yes
+    name:
+      - jq
+      - curl
+  tags:
+    - promtail
+    - promtail_system
+
 - name: Create promtail group
   ansible.builtin.group:
     state: present
