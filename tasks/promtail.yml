@@ -6,6 +6,7 @@
     name:
       - jq
       - curl
+      - unzip
   tags:
     - promtail
     - promtail_system
