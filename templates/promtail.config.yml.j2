@@ -30,6 +30,7 @@ scrape_configs:
         labels:
           job: varlogs
           __path__: /var/log/*log*
+          __path_exclude__: /var/log/ubuntu-advantage*
 
   - job_name: apache
     static_configs:
