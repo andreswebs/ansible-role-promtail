@@ -49,16 +49,16 @@
     - promtail
     - promtail_system
 
-- name: Set positions.yml permissions
-  ansible.builtin.file:
-    owner: promtail
-    group: promtail
-    mode: '0644'
-    state: touch
-    path: /var/lib/promtail/positions.yml
-  tags:
-    - promtail
-    - promtail_system
+# - name: Set positions.yml permissions
+#   ansible.builtin.file:
+#     owner: promtail
+#     group: promtail
+#     mode: '0644'
+#     state: touch
+#     path: /var/lib/promtail/positions.yml
+#   tags:
+#     - promtail
+#     - promtail_system
 
 - name: Create Promtail config dir
   ansible.builtin.file:
@@ -82,6 +82,9 @@
   tags:
     - promtail
     - promtail_config
+  notify:
+    - Restart Promtail
+
 
 - name: Install Promtail
   # ansible.builtin.script: scripts/install-promtail
