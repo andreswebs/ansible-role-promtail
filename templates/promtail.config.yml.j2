@@ -29,8 +29,8 @@ scrape_configs:
           - localhost
         labels:
           job: varlogs
-          __path__: /var/log/*log*
-          __path_exclude__: /var/log/+(ubuntu-advantage*|*.gz)
+          __path__: /var/log/**/*log*
+          __path_exclude__: /var/log/**/+(ubuntu-advantage*|*.gz)
 
   - job_name: apache
     static_configs:
