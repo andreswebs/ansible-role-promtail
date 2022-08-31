@@ -71,6 +71,7 @@
     - promtail
     - promtail_system
     - promtail_config
+    - promtail_config_dir
 
 - name: Set Promtail config
   ansible.builtin.template:
@@ -82,6 +83,7 @@
   tags:
     - promtail
     - promtail_config
+    - promtail_config_file
   notify:
     - Restart Promtail
 
