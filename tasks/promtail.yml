@@ -59,6 +59,8 @@
 #   tags:
 #     - promtail
 #     - promtail_system
+#   notify:
+#     - systemctl restart promtail
 
 - name: Create Promtail config dir
   ansible.builtin.file:
@@ -85,7 +87,7 @@
     - promtail_config
     - promtail_config_file
   notify:
-    - Restart Promtail
+    - systemctl restart promtail
 
 
 - name: Install Promtail
@@ -96,6 +98,8 @@
   tags:
     - promtail
     - promtail_install
+  notify:
+    - systemctl restart promtail
 
 - name: Set /lib/systemd/system/promtail.service
   ansible.builtin.copy:
@@ -107,6 +111,8 @@
   tags:
     - promtail
     - promtail_service
+  notify:
+    - systemctl restart promtail
 
 - name: Start and enable Promtail service
   ansible.builtin.service:
